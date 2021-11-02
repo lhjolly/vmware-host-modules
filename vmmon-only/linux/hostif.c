@@ -1681,7 +1681,7 @@ HostIF_EstimateLockedPageLimit(const VMDriver* vm,                // IN
     */
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(5, 0, 0)
-   extern unsigned long totalram_pages;
+   extern unsigned long totalram_pages(void);
    PageCnt totalPhysicalPages = totalram_pages;
 #else
    PageCnt totalPhysicalPages = totalram_pages();
@@ -1712,9 +1712,9 @@ HostIF_EstimateLockedPageLimit(const VMDriver* vm,                // IN
    lockedPages += global_node_page_state_pages(NR_SLAB_UNRECLAIMABLE_B);
 #elif LINUX_VERSION_CODE >= KERNEL_VERSION(4, 13, 0)
    /* NR_SLAB_* moved from zone to node in 4.13. */
-   lockedPages += global_node_page_state(NR_SLAB_UNRECLAIMABLE);
+   lockedPages += global_node_page_state(NR_SLAB_UNRECLAIMABLE_B);
 #else
-   lockedPages += global_page_state(NR_SLAB_UNRECLAIMABLE);
+   lockedPages += global_page_state(NR_SLAB_UNRECLAIMABLE_B);
 #endif
    /* NR_UNEVICTABLE moved from global to node in 4.8. */
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 8, 0)
